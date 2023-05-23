@@ -1,10 +1,7 @@
 <template>
   <div>
     <button @click="login">Login</button>
-    <div>
-      {{ token }}
-    </div>
-    <button @click="getUsers">Get Users</button>
+    <button @click="getUsers" v-if="token">Get Users</button>
     <ul>
       <li v-for="user in users">
         {{ user.email }}
@@ -30,37 +27,31 @@ export default {
   },
 
   methods: {
-    async login() {
-      try {
-        const { data } = await authService.login( this.email, this.password );
-
-        this.token = data.token;
-      } catch (error) {
-        console.error(error);
-      }
+    login() {
+      authService.login( this.email, this.password )
+      .then( ({ data }) => this.token = data.token )
+      .catch( error => console.error(error) );
     },
-    async getUsers() {
+
+    getUsers() {
       if(!this.token) return;
 
-      try {
-        const { data } = await userSevice.index( this.token );
-
-        this.users = data;
-      } catch (error) {
-        console.error(error);
-      }
+      userSevice.index( this.token )
+        .then( ({ data }) => this.users = data )
+        .catch( error => console.error(error) );
     },
-    async logout() {
+
+    logout() {
       if(!this.token) return;
 
-      try {
-        await authService.logout(this.token);
+      authService.logout(this.token)
+      .then( () => this.clearData() )
+      .catch( error => console.error(error) );
+    },
 
-        this.token = '';
-        this.users = [];
-      } catch (error) {
-        console.error(error);
-      }
+    clearData() {
+      this.token = '';
+      this.users = [];
     }
   },
 }
