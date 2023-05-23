@@ -1,7 +1,7 @@
 class AuthenticationController < ApplicationController
   skip_before_action :authenticate_user
 
-  # POST /auth/login
+  # POST /auth
   def create
     @user = User.find_by_email(params[:email])
     if @user&.authenticate(params[:password])
@@ -12,6 +12,7 @@ class AuthenticationController < ApplicationController
     end
   end
 
+  # DELETE /auth
   def destroy
     @current_user&.update(jti: nil)
     render json: { status: 200, message: 'Logged out' }

@@ -28,7 +28,7 @@ export default {
 
   methods: {
     login() {
-      const endpoint = 'auth/login';
+      const endpoint = 'auth';
 
       this.axios.post(this.url + endpoint, {
         email: this.email,
@@ -58,9 +58,9 @@ export default {
       });
     },
     logout() {
-      const endpoint = 'auth/logout';
+      const endpoint = 'auth';
 
-      this.axios.post(this.url + endpoint, {
+      this.axios.delete(this.url + endpoint, {
         headers: {
           Authorization: 'Bearer ' + this.token,
         },
