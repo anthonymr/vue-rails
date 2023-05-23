@@ -15,6 +15,9 @@
 </template>
 
 <script>
+import  authService  from '../services/authService.js';
+import  userSevice  from '../services/userService.js';
+
 export default {
   data() {
     return {
@@ -27,51 +30,37 @@ export default {
   },
 
   methods: {
-    login() {
-      const endpoint = 'auth';
+    async login() {
+      try {
+        const { data } = await authService.login( this.email, this.password );
 
-      this.axios.post(this.url + endpoint, {
-        email: this.email,
-        password: this.password,
-      })
-      .then((response) => {
-        console.log(response.data);
-        this.token = response.data.token;
-      })
-      .catch((error) => {
+        this.token = data.token;
+      } catch (error) {
         console.error(error);
-      });
+      }
     },
-    getUsers() {
-      const endpoint = 'users';
+    async getUsers() {
+      if(!this.token) return;
 
-      this.axios.get(this.url + endpoint, {
-        headers: {
-          Authorization: 'Bearer ' + this.token,
-        },
-      })
-      .then((response) => {
-        this.users = response.data;
-      })
-      .catch((error) => {
+      try {
+        const { data } = await userSevice.index( this.token );
+
+        this.users = data;
+      } catch (error) {
         console.error(error);
-      });
+      }
     },
-    logout() {
-      const endpoint = 'auth';
+    async logout() {
+      if(!this.token) return;
 
-      this.axios.delete(this.url + endpoint, {
-        headers: {
-          Authorization: 'Bearer ' + this.token,
-        },
-      })
-      .then(() => {
+      try {
+        await authService.logout(this.token);
+
         this.token = '';
         this.users = [];
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(error);
-      });
+      }
     }
   },
 }
