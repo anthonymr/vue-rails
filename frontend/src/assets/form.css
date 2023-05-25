@@ -1,0 +1,23 @@
+.form-container > form {
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  padding: 20px;
+  display: grid;
+  grid-gap: 1rem;
+  box-shadow: var(--shadow);
+  background-color: var(--background-color);
+}
+
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 50px 0;
+}
+
+.form-container label {
+  display: block;
+}
+
+.form-container input {
+  width: 100%;
+}
